@@ -28,22 +28,22 @@ Settings
 
 Pelican-albums provides a couple of settings:
 
-- ``ALBUM_PATH`` ('images'): What directory inside ``content`` contains your
+- ``ALBUM_PATH`` (*images*): What directory inside ``content`` contains your
   albums.
-- ``THUMBNAIL_OUTPUT_PATH`` ('images/thumbnails'): What directory inside
-  ``output`` will be used to store thumbnails.
-- ``THUMBNAIL_DEFAULT_SIZE`` ('192x192'): What the default size of a thumbnail
-  should be.
-- ``ALBUM_SAVE_AS`` ('albums/{slug}.html'): Where to store album indexes.
-- ``ALBUM_URL`` ('albums/{slug}.html'):  The URL scheme to reference an album.
+- ``THUMBNAIL_OUTPUT_PATH`` (*images/thumbnails*): What directory inside
+  the ``output`` directory will be used to store thumbnails.
+- ``THUMBNAIL_DEFAULT_SIZE`` (*192x192*): What the default size of a
+  thumbnail should be.
+- ``ALBUM_SAVE_AS`` (*albums/{slug}.html*): Where to store album indexes.
+- ``ALBUM_URL`` (*albums/{slug}.html*):  The URL scheme to reference an album.
 
 Albums
 ------
 
 To create a new album, just create a new directory in the ``ALBUM_PATH`` (the
-default is content/images) and place the images inside it. Please note that
+default is *content/images*) and place the images inside it. Please note that
 pelican-albums does not offer facilities to rotate or resize the images for
-you (except for thumbnails).
+you (except for creating thumbnails) at this moment.
 
 Thumbnails
 ----------
@@ -96,7 +96,8 @@ properties:
 album.html
 ----------
 
-An example template for album pages::
+An example template for album pages (save this as _album.html_ inside your
+templates directory)::
 
     {% extends "base.html" %}
     {% block title %}{{ page.title }}{%endblock%}
