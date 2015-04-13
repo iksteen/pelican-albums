@@ -84,6 +84,15 @@ The ``album`` object has several properties:
 - ``pages`` -- The album pages for this album (you can create multiple pages
   for each album if you want).
 
+The ``image`` objects returned by ``album.images`` have the following
+properties:
+
+- ``album`` -- The album this image belongs to.
+- ``filename`` -- The filename of this image.
+- ``url`` -- The URL of this image relative to the site URL.
+- ``thumbnail(size=None)`` -- A method that returns the URL of a thumbnail of
+  the given (or default) size relative to the site URL.
+
 album.html
 ----------
 
