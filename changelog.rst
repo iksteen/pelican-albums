@@ -4,6 +4,7 @@ Release history
 0.5.2
 =====
 
+* Allow using PNG files as thumbnails instead of JPEG.
 * Allow specifying the thumbnail quality.
 * Increase default quality to 80%.
 

@@ -32,10 +32,12 @@ Pelican-albums provides a couple of settings:
   albums.
 - ``THUMBNAIL_OUTPUT_PATH`` (*images/thumbnails*): What directory inside
   the ``output`` directory will be used to store thumbnails.
+- ``THUMBNAIL_OUTPUT_FORMAT`` (*JPEG*): As what format the thumbnails should
+  be created (*JPEG* or *PNG*).
 - ``THUMBNAIL_DEFAULT_SIZE`` (*192x192*): What the default size of a
   thumbnail should be.
 - ``THUMBNAIL_DEFAULT_QUALITY`` (*80*): What the default quality of a
-  thumbnail should be.
+  JPEG thumbnail should be.
 - ``ALBUM_SAVE_AS`` (*albums/{slug}.html*): Where to store album indexes.
 - ``ALBUM_URL`` (*albums/{slug}.html*):  The URL scheme to reference an album.
 
@@ -73,7 +75,8 @@ A thumbnail size specifier can have a number of different forms:
 
 You can optionally add an *@nn* suffix to the size to indicate the thumbnail
 quality that should be used (f.e. 192@80 for a 192x192 thumbnail at 80%
-quality).
+quality). This specifies the JPEG file quality and does not apply to PNG
+thumbnails.
 
 Album pages
 -----------

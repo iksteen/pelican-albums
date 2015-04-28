@@ -7,6 +7,11 @@ PENDING_THUMBNAILS = set()
 
 
 def request_thumbnail(image, spec, settings):
+    if settings['THUMBNAIL_OUTPUT_FORMAT'] == 'PNG':
+        ext = 'png'
+    else:
+        ext = 'jpg'
+
     if not spec:
         spec = settings['THUMBNAIL_DEFAULT_SIZE']
 
@@ -34,7 +39,11 @@ def request_thumbnail(image, spec, settings):
 
     path, filename = os.path.split(image)
     filename = os.path.splitext(filename)[0]
-    return os.path.join(settings['THUMBNAIL_OUTPUT_PATH'], path, '%dx%d@%d' % (w, h, quality), '%s.jpg' % filename)
+    return os.path.join(
+        settings['THUMBNAIL_OUTPUT_PATH'],
+        path, '%dx%d@%d' % (w, h, quality),
+        '%s.%s' % (filename, ext)
+    )
 
 
 def generate_thumbnails(pelican):
@@ -43,6 +52,11 @@ def generate_thumbnails(pelican):
     settings = pelican.settings
     path_prefix = os.path.join(settings['PATH'], settings['ALBUM_PATH'])
     output_prefix = os.path.join(settings['OUTPUT_PATH'], settings['THUMBNAIL_OUTPUT_PATH'])
+    if settings['THUMBNAIL_OUTPUT_FORMAT'] == 'PNG':
+        ext = 'png'
+    else:
+        ext = 'jpg'
+
     for image, w, h, quality in PENDING_THUMBNAILS:
         src = os.path.join(path_prefix, image)
         src_stat = os.stat(src)
@@ -52,7 +66,7 @@ def generate_thumbnails(pelican):
         destdir = os.path.join(output_prefix, path, '%dx%d@%d' % (w, h, quality))
         if not os.path.isdir(destdir):
             os.makedirs(destdir)
-        dest = os.path.join(destdir, '%s.jpg' % filename)
+        dest = os.path.join(destdir, '%s.%s' % (filename, ext))
 
         if os.path.isfile(dest):
             dest_stat = os.stat(dest)
@@ -72,7 +86,12 @@ def generate_thumbnails(pelican):
             im.thumbnail((w, h))
         else:
             im = ImageOps.fit(im, (w, h), Image.ANTIALIAS)
-        im.save(dest, 'JPEG', quality=quality)
+
+        if ext == 'png':
+            im.save(dest, 'PNG', optimize=True)
+        else:
+            im.save(dest, 'JPEG', quality=quality)
+
         os.utime(dest, (src_stat.st_atime, src_stat.st_mtime))
 
     PENDING_THUMBNAILS = set()

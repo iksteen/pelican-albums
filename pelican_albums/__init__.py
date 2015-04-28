@@ -6,6 +6,7 @@ from . import thumbnails, generator, content
 def initialized(pelican):
     pelican.settings.setdefault('ALBUM_PATH', 'images')
     pelican.settings.setdefault('THUMBNAIL_OUTPUT_PATH', 'images/thumbnails')
+    pelican.settings.setdefault('THUMBNAIL_OUTPUT_FORMAT', 'JPEG')
     pelican.settings.setdefault('THUMBNAIL_DEFAULT_SIZE', '192x192')
     pelican.settings.setdefault('THUMBNAIL_DEFAULT_QUALITY', 80)
     pelican.settings.setdefault('ALBUM_SAVE_AS', 'albums/{slug}.html')
