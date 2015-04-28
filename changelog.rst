@@ -1,6 +1,12 @@
 Release history
 ###############
 
+0.5.2
+=====
+
+* Allow specifying the thumbnail quality.
+* Increase default quality to 80%.
+
 0.5.1 (2015-04-13)
 ==================
 

@@ -9,7 +9,7 @@ Features
 
 - Easily reference an image in your album path using {image}album/image.jpg.
 - Automatically create a thumbnail for an image in your album path using
-  ``{thumbnail}album/image.jpg`` or ``{thumbnail:NxN}album/image.jpg``.
+  ``{thumbnail}album/image.jpg`` or ``{thumbnail:NxN@Q}album/image.jpg``.
 - Automatically create album pages by adding a page to an album directory.
 
 Installation
@@ -34,6 +34,8 @@ Pelican-albums provides a couple of settings:
   the ``output`` directory will be used to store thumbnails.
 - ``THUMBNAIL_DEFAULT_SIZE`` (*192x192*): What the default size of a
   thumbnail should be.
+- ``THUMBNAIL_DEFAULT_QUALITY`` (*80*): What the default quality of a
+  thumbnail should be.
 - ``ALBUM_SAVE_AS`` (*albums/{slug}.html*): Where to store album indexes.
 - ``ALBUM_URL`` (*albums/{slug}.html*):  The URL scheme to reference an album.
 
@@ -52,11 +54,11 @@ Pelican-albums will automatically generate the requested thumbnails at the
 requested sizes. It will check the ``mtime`` of the original file to that
 of the thumbnail to check if the thumbnail should be refreshed.
 
-You can specify the size of a thumbnail on different places:
+You can specify the size and quality of a thumbnail on different places:
 
-- Inside the {thumbnail} tag: {thumbnail:128x128}album/image.jpg
-- In the metadata of the content: Thumbnail-Size: 128x128
-- As a parameter to the ``album.thumbnail(size=None)`` in your templates.
+- Inside the {thumbnail} tag: {thumbnail:128x128@80}album/image.jpg
+- In the metadata of the content: Thumbnail-Size: 128x128@80
+- As a parameter to the ``album.thumbnail(spec=None)`` in your templates.
 - In the global pelican settings.
 
 A thumbnail size specifier can have a number of different forms:
@@ -68,6 +70,10 @@ A thumbnail size specifier can have a number of different forms:
   aspect ratio so the height might vary (f.e. 192x).
 - *xHEIGHT* -- Create a thumbnail with the given height but keep the original
   aspect ratio so the width might vary (f.e. x192).
+
+You can optionally add an *@nn* suffix to the size to indicate the thumbnail
+quality that should be used (f.e. 192@80 for a 192x192 thumbnail at 80%
+quality).
 
 Album pages
 -----------
@@ -90,13 +96,13 @@ properties:
 - ``album`` -- The album this image belongs to.
 - ``filename`` -- The filename of this image.
 - ``url`` -- The URL of this image relative to the site URL.
-- ``thumbnail(size=None)`` -- A method that returns the URL of a thumbnail of
-  the given (or default) size relative to the site URL.
+- ``thumbnail(spec=None)`` -- A method that returns the URL of a thumbnail of
+  the given (or default) size and quality relative to the site URL.
 
 album.html
 ----------
 
-An example template for album pages (save this as _album.html_ inside your
+An example template for album pages (save this as *album.html* inside your
 templates directory)::
 
     {% extends "base.html" %}

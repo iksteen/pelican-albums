@@ -16,8 +16,8 @@ class ImageContent(object):
     def url(self):
         return self.album.url + '/' + self.filename
 
-    def thumbnail(self, size=''):
-        return thumbnails.request_thumbnail(os.path.join(self.album.name, self.filename), size, self.settings)
+    def thumbnail(self, spec=''):
+        return thumbnails.request_thumbnail(os.path.join(self.album.name, self.filename), spec, self.settings)
 
 
 class AlbumContent(object):

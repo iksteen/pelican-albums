@@ -6,23 +6,35 @@ from pelican import logger
 PENDING_THUMBNAILS = set()
 
 
-def request_thumbnail(image, size, settings):
-    if not size:
-        size = settings['THUMBNAIL_DEFAULT_SIZE']
+def request_thumbnail(image, spec, settings):
+    if not spec:
+        spec = settings['THUMBNAIL_DEFAULT_SIZE']
 
-    if 'x' not in size:
-        size = size + 'x' + size
+    if '@' not in spec:
+        quality = settings['THUMBNAIL_DEFAULT_QUALITY']
+    else:
+        spec, quality = spec.split('@', 1)
+
+    if 'x' not in spec:
+        size = spec + 'x' + spec
+    else:
+        size = spec
+
     try:
         w, h = map(lambda v: 0 if not v else int(v), size.split('x', 1))
     except ValueError:
         logger.warning('Invalid size for thumbnail %s: %s (using 128x128)' % (image, size))
         w, h = 128, 128
+    try:
+        quality = int(quality)
+    except ValueError:
+        logger.warning('Invalid quality for thumbnail %s: %s (using 80)' % (image, quality))
 
-    PENDING_THUMBNAILS.add((image, w, h))
+    PENDING_THUMBNAILS.add((image, w, h, quality))
 
     path, filename = os.path.split(image)
     filename = os.path.splitext(filename)[0]
-    return os.path.join(settings['THUMBNAIL_OUTPUT_PATH'], path, '%dx%d' % (w, h), '%s.jpg' % filename)
+    return os.path.join(settings['THUMBNAIL_OUTPUT_PATH'], path, '%dx%d@%d' % (w, h, quality), '%s.jpg' % filename)
 
 
 def generate_thumbnails(pelican):
@@ -31,13 +43,13 @@ def generate_thumbnails(pelican):
     settings = pelican.settings
     path_prefix = os.path.join(settings['PATH'], settings['ALBUM_PATH'])
     output_prefix = os.path.join(settings['OUTPUT_PATH'], settings['THUMBNAIL_OUTPUT_PATH'])
-    for image, w, h in PENDING_THUMBNAILS:
+    for image, w, h, quality in PENDING_THUMBNAILS:
         src = os.path.join(path_prefix, image)
         src_stat = os.stat(src)
 
         path, filename = os.path.split(image)
         filename = os.path.splitext(filename)[0]
-        destdir = os.path.join(output_prefix, path, '%dx%d' % (w, h))
+        destdir = os.path.join(output_prefix, path, '%dx%d@%d' % (w, h, quality))
         if not os.path.isdir(destdir):
             os.makedirs(destdir)
         dest = os.path.join(destdir, '%s.jpg' % filename)
@@ -60,7 +72,7 @@ def generate_thumbnails(pelican):
             im.thumbnail((w, h))
         else:
             im = ImageOps.fit(im, (w, h), Image.ANTIALIAS)
-        im.save(dest, 'JPEG', quality=60)
+        im.save(dest, 'JPEG', quality=quality)
         os.utime(dest, (src_stat.st_atime, src_stat.st_mtime))
 
     PENDING_THUMBNAILS = set()
