@@ -1,8 +1,8 @@
 Release history
 ###############
 
-0.5.2
-=====
+0.6.0 (2015-04-28)
+==================
 
 * Allow using PNG files as thumbnails instead of JPEG.
 * Allow specifying the thumbnail quality.
