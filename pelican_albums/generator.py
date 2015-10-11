@@ -1,8 +1,9 @@
+import operator
 import os
 from pelican import logger
 from pelican.contents import Page
 from pelican.generators import Generator
-from PIL import Image
+from PIL import Image as PILImage
 from . import thumbnails
 
 try:
@@ -17,6 +18,7 @@ class ImageContent(object):
         self.album = album
         self.filename = filename
         self.settings = settings
+        self.page = None
 
     @property
     def url(self):
@@ -24,6 +26,25 @@ class ImageContent(object):
 
     def thumbnail(self, spec=''):
         return thumbnails.request_thumbnail(os.path.join(self.album.name, self.filename), spec, self.settings)
+
+
+class Image(Page):
+    default_template = 'image'
+    image = None
+
+    @property
+    def prev(self):
+        return self._prev_next(operator.sub)
+
+    @property
+    def next(self):
+        return self._prev_next(operator.add)
+
+    def _prev_next(self, op):
+        images = self.image.album.images
+        index = images.index(self.image)
+        prev_index = op(index, 1) % len(images)
+        return images[prev_index].page
 
 
 class AlbumContent(object):
@@ -39,7 +60,9 @@ class AlbumContent(object):
         return (self.settings['ALBUM_PATH'] + '/' + self.name) if self.name else self.settings['ALBUM_PATH']
 
     def add_image(self, filename):
-        self._images[filename] = ImageContent(self, filename, self.settings)
+        image = ImageContent(self, filename, self.settings)
+        self._images[filename] = image
+        return image
 
     @property
     def images(self):
@@ -63,7 +86,8 @@ class Album(Page):
 
 
 class AlbumGenerator(Generator):
-    pages = None
+    album_pages = None
+    image_pages = None
 
     def find_albums(self, path=(), parent=None):
         album_path = os.path.join(self.path, self.settings['ALBUM_PATH'], *path)
@@ -73,6 +97,9 @@ class AlbumGenerator(Generator):
         if parent:
             parent.albums.append(album)
 
+        # Images don't have titles, use the basename instead.
+        image_settings = dict(self.settings, SLUGIFY_SOURCE='basename')
+
         for filename in os.listdir(album_path):
             f = os.path.join(album_path, filename)
 
@@ -80,8 +107,13 @@ class AlbumGenerator(Generator):
                 self.find_albums(path + (filename,), album)
             else:
                 try:
-                    Image.open(f)
-                    album.add_image(filename)
+                    PILImage.open(file_path)
+                    image = album.add_image(filename)
+                    page = Image('', settings=image_settings, source_path=filename)
+                    page.image = image
+                    image.page = page
+                    self.add_source_path(page)
+                    self.image_pages.append(page)
                 except IOError:
                     try:
                         page = self.readers.read_file(
@@ -102,19 +134,26 @@ class AlbumGenerator(Generator):
                         continue
 
                     page.album = album
-                    self.pages.append(page)
+                    self.album_pages.append(page)
                     album.pages.append(page)
 
     def generate_context(self):
-        self.pages = []
+        self.album_pages = []
+        self.image_pages = []
         self.find_albums()
-        self.context['albums'] = [p for p in sorted(self.pages, key=lambda p: p.metadata['title'])]
+        self.context['albums'] = [p for p in sorted(self.album_pages, key=operator.attrgetter('title'))]
 
     def generate_output(self, writer):
-        for page in self.pages:
+        for page in self.album_pages:
             writer.write_file(
                 page.save_as, self.get_template(page.template),
                 self.context, page=page, album=page.album,
+                relative_urls=self.settings['RELATIVE_URLS'],
+                override_output=hasattr(page, 'override_save_as'))
+        for page in self.image_pages:
+            writer.write_file(
+                page.save_as, self.get_template(page.template),
+                self.context, page=page, image=page.image,
                 relative_urls=self.settings['RELATIVE_URLS'],
                 override_output=hasattr(page, 'override_save_as'))
 
