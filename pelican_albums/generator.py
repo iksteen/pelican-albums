@@ -107,7 +107,7 @@ class AlbumGenerator(Generator):
                 self.find_albums(path + (filename,), album)
             else:
                 try:
-                    PILImage.open(file_path)
+                    PILImage.open(f)
                     image = album.add_image(filename)
                     page = Image('', settings=image_settings, source_path=filename)
                     page.image = image
