@@ -11,13 +11,15 @@ def initialized(pelican):
     pelican.settings.setdefault('THUMBNAIL_DEFAULT_QUALITY', 80)
     pelican.settings.setdefault('ALBUM_SAVE_AS', 'albums/{slug}.html')
     pelican.settings.setdefault('ALBUM_URL', 'albums/{slug}.html')
+    pelican.settings.setdefault('IMAGE_SAVE_AS', 'albums/{slug}.html')
+    pelican.settings.setdefault('IMAGE_URL', 'albums/{slug}.html')
 
     image_path = os.path.join(
         pelican.settings['PATH'],
         pelican.settings['ALBUM_PATH']
     )
-    pelican.settings.setdefault('ARTICLE_EXCLUDES', []).append(image_path)
-    pelican.settings.setdefault('PAGE_EXCLUDES', []).append(image_path)
+    pelican.settings['ARTICLE_EXCLUDES'].append(image_path)
+    pelican.settings['PAGE_EXCLUDES'].append(image_path)
 
 
 def register():
