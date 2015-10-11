@@ -40,6 +40,8 @@ Pelican-albums provides a couple of settings:
   JPEG thumbnail should be.
 - ``ALBUM_SAVE_AS`` (*albums/{slug}.html*): Where to store album indexes.
 - ``ALBUM_URL`` (*albums/{slug}.html*):  The URL scheme to reference an album.
+- ``IMAGE_SAVE_AS`` (*albums/{slug}.html*): Where to store image indexes.
+- ``IMAGE_URL`` (*albums/{slug}.html*):  The URL scheme to reference an image.
 
 Albums
 ------
@@ -110,6 +112,13 @@ properties:
 - ``url`` -- The URL of this image relative to the site URL.
 - ``thumbnail(spec=None)`` -- A method that returns the URL of a thumbnail of
   the given (or default) size and quality relative to the site URL.
+
+Image pages
+-----------
+
+For each image, a page will be generated using the ``image.html``
+template. Both the ``image`` and the ``page`` will be available inside the
+template.
 
 album.html
 ----------
