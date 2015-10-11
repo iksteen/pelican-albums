@@ -74,14 +74,13 @@ class AlbumGenerator(Generator):
             parent.albums.append(album)
 
         for filename in os.listdir(album_path):
-            f = os.path.join(self.path, self.settings['ALBUM_PATH'], *path + (filename,))
-            file_path = os.path.join(album_path, filename)
+            f = os.path.join(album_path, filename)
 
-            if os.path.isdir(file_path):
+            if os.path.isdir(f):
                 self.find_albums(path + (filename,), album)
             else:
                 try:
-                    Image.open(file_path)
+                    Image.open(f)
                     album.add_image(filename)
                 except IOError:
                     try:
