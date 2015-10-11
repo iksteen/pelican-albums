@@ -83,8 +83,17 @@ Album pages
 
 By creating a page inside an album folder, a page will be generated using the
 ``album.html`` template. Both the ``album`` and the ``page`` will be available
-inside the template. The ``page`` object works exactly as the regular pelican
-page objects.
+inside the template. The ``page`` object works as the regular pelican page
+objects.
+
+The ``page`` handles additional metadata:
+
+- ``cover`` -- The filename of the image to use as the cover. Defaults to the
+  first image alphabetically.
+
+The ``page`` object has the following additional property:
+
+- ``cover_image`` -- The cover of the of the page as an ``image`` object.
 
 The ``album`` object has several properties:
 
@@ -117,11 +126,11 @@ templates directory)::
                 {{ page.title }}
             </div>
         </header>
-    
+
         <div class="entry-content">
             {{ page.content }}
         </div>
-    
+
         <div class="album">
             {% for image in album.images %}
                 <a href="{{ SITEURL }}/{{ image.url }}">

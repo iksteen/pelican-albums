@@ -50,6 +50,17 @@ class Album(Page):
     default_template = 'album'
     album = None
 
+    @property
+    def cover_image(self):
+        try:
+            # Cover set through page metadata.
+            filename = self.cover
+        except AttributeError:
+            cover = self.album.images[0]
+        else:
+            cover = self.album._images[filename]
+        return cover
+
 
 class AlbumGenerator(Generator):
     albums = None
