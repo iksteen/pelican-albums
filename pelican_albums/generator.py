@@ -63,7 +63,6 @@ class Album(Page):
 
 
 class AlbumGenerator(Generator):
-    albums = None
     pages = None
 
     def find_albums(self, path=(), parent=None):
