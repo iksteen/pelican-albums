@@ -1,6 +1,13 @@
 Release history
 ###############
 
+=======
+TBD (TBD)
+=========
+
+* Add per-image page output (by jdufresne).
+* Support for specifying an album cover (by jdufresne).
+
 0.6.1 (2019-02-23)
 ==================
 
