@@ -60,7 +60,7 @@ You can specify the size and quality of a thumbnail on different places:
 
 - Inside the {thumbnail} tag: {thumbnail:128x128@80}album/image.jpg
 - In the metadata of the content: Thumbnail-Size: 128x128@80
-- As a parameter to the ``album.thumbnail(spec=None)`` in your templates.
+- As a parameter to the ``image.thumbnail(spec=None)`` in your templates.
 - In the global pelican settings.
 
 A thumbnail size specifier can have a number of different forms:
