@@ -1,8 +1,8 @@
 Release history
 ###############
 
-TBD (TBD)
-=========
+0.6.1 (2019-02-23)
+==================
 
 * Add support for pelican 4.0.0.
 

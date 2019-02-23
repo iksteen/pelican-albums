@@ -2,7 +2,7 @@ from setuptools import setup
 import os
 
 
-__version__ = '0.6.0'
+__version__ = '0.6.1'
 
 
 requires = [
