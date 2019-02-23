@@ -1,9 +1,15 @@
 import os
 from pelican import logger
-from pelican.contents import is_valid_content, Page
+from pelican.contents import Page
 from pelican.generators import Generator
 from PIL import Image
 from . import thumbnails
+
+try:
+    from pelican.contents import is_valid_content, Page
+except ImportError:
+    def is_valid_content(page, _):
+        return page.is_valid()
 
 
 class ImageContent(object):

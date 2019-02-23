@@ -1,6 +1,11 @@
 Release history
 ###############
 
+TBD (TBD)
+=========
+
+* Add support for pelican 4.0.0.
+
 0.6.0 (2015-04-28)
 ==================
 
